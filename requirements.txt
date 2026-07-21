@@ -19,3 +19,7 @@ pillow
 
 #Frontend
 streamlit
+
+#Voice pipeline
+librosa
+resemblyzer

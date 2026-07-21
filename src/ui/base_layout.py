@@ -25,9 +25,12 @@ def style_bg_dashboard():
         """
             <style>
                 .stApp{
-                    background:#F0F4FF  !important;        
+                    background:#D7E1F2  !important;      
+                    color:#06113A !important;  
                 }
-                
+                [data-testid="stTextInput"] input{
+                    color:black !important;
+                }
             </style>
         """,
         unsafe_allow_html=True
@@ -40,9 +43,9 @@ def style_base_layout():
             <style>
             @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&display=swap');
             @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&family=Outfit:wght@100..900&display=swap');
-                #MainMenu, header, footer{
-                    visibility:hidden;        
-                }
+                # #MainMenu, header, footer{
+                #     visibility:hidden;        
+                # }
                 .block-container{
                     padding-top:1.5rem !important;
                 }
@@ -73,7 +76,7 @@ def style_base_layout():
                     color:white !important;
                 }
                 button[kind="tertiary"]{
-                    background:#006666 !important;
+                    background-color:#006666 !important;
                     border-radius:1.5rem !important;
                     border: none !important;
                     transition:transform 0.3s ease-in-out !important;

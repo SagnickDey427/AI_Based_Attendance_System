@@ -1,8 +1,8 @@
 import streamlit as st
-from src.components.header_home import header_home
+from src.components.header import header_home
 from src.ui.base_layout import style_bg_home
 from src.ui.base_layout import style_base_layout
-from src.components.footer import footer_home
+from src.components.footer import footer
 
 def home_screen():
     style_bg_home()
@@ -26,7 +26,7 @@ def home_screen():
     with col3:
         html_content = """
         <div class="teacher-card">
-            <h2>I'm<br>Teacher</h2>
+            <h2>I'm<br>Student</h2>
             <img src="https://i.ibb.co/844D9Lrt/mascot-student.png" width="120" style="margin-top: 10px;">
         </div>
         """
@@ -34,4 +34,4 @@ def home_screen():
         if st.button("Go to student portal", use_container_width=True,icon=':material/arrow_outward:',icon_position='right'):
             st.session_state['login_type']='student'
             st.rerun()
-    footer_home()
+    footer()
