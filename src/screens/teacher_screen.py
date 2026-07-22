@@ -1,4 +1,5 @@
 import streamlit as st
+from src.components.dialog_create_subject import create_subject_dialog
 from src.ui.base_layout import style_base_layout
 from src.ui.base_layout import style_bg_dashboard
 from src.components.header import header_dashboard
@@ -159,7 +160,16 @@ def teacher_dashboard():
 def teacher_tab_take_attendance():
     st.subheader("Take AI attendance") 
 def teacher_tab_manage_subjects():
-    st.subheader("Manage Subjects") 
+    teacher_id = st.session_state['teacher_id']
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Manage Subjects") 
+    with col2:
+        if st.button("Create new subject",type='primary', width='stretch'):
+            create_subject_dialog(teacher_id)
+
+    #list all subjects
+    subjects = get_teacher_subjects(teacher_id)
 def teacher_tab_attendance_records():
     st.subheader("Attendance records") 
 
