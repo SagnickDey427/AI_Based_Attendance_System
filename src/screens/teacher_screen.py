@@ -1,10 +1,12 @@
 import streamlit as st
+from src.components.dialog_share_subject import share_subject_dialog
+from src.components.subject_card import subject_card
 from src.components.dialog_create_subject import create_subject_dialog
 from src.ui.base_layout import style_base_layout
 from src.ui.base_layout import style_bg_dashboard
 from src.components.header import header_dashboard
 from src.components.footer import footer
-from src.database.db import create_teacher,check_teacher_exist,teacher_login
+from src.database.db import create_teacher,check_teacher_exist, get_teacher_subjects,teacher_login
 
 def register_teacher(teacher_name,teacher_username,teacher_pass,teacher_pass_confirm):
     if not teacher_name or not teacher_username or not teacher_pass or not teacher_pass_confirm:
@@ -32,6 +34,7 @@ def login_teacher(teacher_username, teacher_pass):
                 st.session_state.user_role = "teacher"
                 st.session_state.is_logged_in = True
                 st.session_state.teacher_data = teacher
+                st.session_state.teacher_id = teacher['teacher_id']
                 return True,"Logged in successfully"
             return False,"Unknown Error!"
         except Exception as e:
@@ -159,6 +162,9 @@ def teacher_dashboard():
 
 def teacher_tab_take_attendance():
     st.subheader("Take AI attendance") 
+
+
+
 def teacher_tab_manage_subjects():
     teacher_id = st.session_state['teacher_id']
     col1, col2 = st.columns(2)
@@ -170,6 +176,22 @@ def teacher_tab_manage_subjects():
 
     #list all subjects
     subjects = get_teacher_subjects(teacher_id)
+    if subjects:
+        for sub in subjects:
+            stats = [
+                ("👥","Students",sub['total_students']),
+                ("⏰","Classes",sub['total_classes'])
+            ]
+            def share_subject():
+                if st.button(f"Share code : {sub['subject_code']}",icon=':material/share:',key=f'sub_{sub['subject_code']}'):
+                    share_subject_dialog(sub_name = sub['subject_name'], sub_code = sub['subject_code'])
+                st.space()
+
+            subject_card(name = sub['subject_name'], code = sub['subject_code'], section = sub['section'], stats = stats, footer_callback = share_subject)
+    else:
+        st.info("No subjects found , create one.")
+
+
 def teacher_tab_attendance_records():
     st.subheader("Attendance records") 
 

@@ -1,1 +1,2 @@
-TODO: Create get_teacher_subjects() in db.py
+TODO: Create share_subject_dialog()
+TODO: Create subject_card()

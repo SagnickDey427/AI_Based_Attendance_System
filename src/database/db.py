@@ -42,3 +42,16 @@ def create_subject(sub_id, sub_name, sub_section, teacher_id):
 def get_all_subjects():
     resp = supabase.table("subjects").select("*").execute()
     return resp.data
+
+# Understand how did we wrote relational query to fetch all details here 👇🏻
+def get_teacher_subjects(teacher_id):
+    resp = supabase.table("subjects").select("*,subject_students(count), attendance_logs(timestamp)").eq("teacher_id",teacher_id).execute()
+    subjects = resp.data
+    for sub in subjects:
+        sub['total_students'] = sub.get("subject_students",[{}])[0].get("count",0) if sub.get("subject_students") else 0
+        attendance = sub.get("attendance_logs",[])
+        unique_sessions = len((set(log['timestamp'] for log in attendance)))
+        sub['total_classes'] = unique_sessions
+        sub.pop('attendance_logs',None)
+        sub.pop('subject_students',None)
+    return subjects
