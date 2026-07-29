@@ -55,3 +55,14 @@ def get_teacher_subjects(teacher_id):
         sub.pop('attendance_logs',None)
         sub.pop('subject_students',None)
     return subjects
+
+
+def check_subject_exists(sub_code):
+    res = supabase.table('subjects').selct('*').eq('subject_id',sub_code).execute()
+    subjects = res.data[0]
+    if subjects:
+        return subjects
+    return None
+
+def check_student_already_enrolled(subject_data, student_id):
+    pass

@@ -12,7 +12,28 @@ import numpy as np
 from PIL import Image
 
 def student_dashboard():
-    st.header("Dashboard")
+    if "student_data" in st.session_state:
+            student_data = st.session_state.student_data
+    else:
+        student_data = {"name":"Student(Error)"}
+
+    col1,col2 = st.columns(2)
+    with col1:
+        st.subheader(f"Welcome , {student_data['name']}")
+    with col2:
+        if st.button("Logout",type='tertiary'):
+            del st.session_state['student_data']
+            del st.session_state['user_role']
+            st.rerun()
+
+    st.space()
+
+    c1,c2 = st.columns(2)
+    with c1:
+        st.header("Show subjects")
+    with c2:
+        if st.button("Enroll in subject"):
+            enroll_dialog()
 
 def student_screen():
     style_bg_dashboard()
@@ -20,10 +41,7 @@ def student_screen():
     header_dashboard()
     if 'student_data' in st.session_state:
         student_dashboard()
-        if st.button("Logout",type='tertiary'):
-            del st.session_state['student_data']
-            del st.session_state['user_role']
-            st.rerun()
+        
     else:
         show_registration = False
         st.header("Login using faceId",text_alignment='center')
