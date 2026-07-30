@@ -58,11 +58,32 @@ def get_teacher_subjects(teacher_id):
 
 
 def check_subject_exists(sub_code):
-    res = supabase.table('subjects').selct('*').eq('subject_id',sub_code).execute()
+    res = supabase.table('subjects').select('*').eq('subject_code',sub_code).execute()
     subjects = res.data[0]
     if subjects:
         return subjects
     return None
 
 def check_student_already_enrolled(subject_data, student_id):
-    pass
+    check = supabase.table('subject_students').select('*').eq('subject_id',subject_data['subject_id']).eq('student_id',student_id).execute()
+    if check.data:
+        return True
+    return False
+
+def enroll_student(student_id,subject_id):
+    data = {"student_id":student_id,"subject_id":subject_id}
+    resp = supabase.table("subject_students").insert(data).execute()
+    return resp.data
+
+def unenroll_student(student_id,subject_id):
+    resp = supabase.table('subject_students').delete().eq('subject_id',subject_id).eq('student_id',student_id).execute()
+    return resp.data
+
+
+def get_student_subjects(student_id):
+    resp = supabase.table('subject_students').select('*,subjects(*)').eq('student_id',student_id).execute()
+    return resp.data
+
+def get_student_attendance(student_id):
+    resp = supabase.table('attendance_logs').select('*,subjects(*)').eq('student_id',student_id).execute()
+    return resp.data

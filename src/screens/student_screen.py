@@ -1,7 +1,9 @@
 import time
 
 import streamlit as st
-from src.database.db import create_student, get_all_students
+from src.components.subject_card import subject_card
+from src.components.dialog_enroll import enroll_dialog
+from src.database.db import create_student, get_all_students, get_student_attendance, get_student_subjects, unenroll_student
 from src.pipelines.face_pipeline import get_face_embeddings, predict_attendance, train_classifier
 from src.pipelines.voice_pipeline import get_voice_embedding
 from src.ui.base_layout import style_base_layout
@@ -34,6 +36,45 @@ def student_dashboard():
     with c2:
         if st.button("Enroll in subject"):
             enroll_dialog()
+
+    st.divider()
+    st.space()
+
+    #List all enrolled subjects
+    if st.spinner("Loading your subjects..."):
+        subjects = get_student_subjects(student_data['student_id'])
+        logs = get_student_attendance(student_data['student_id'])
+
+        stats_map={}
+
+        for log in logs:
+            sid = log['subject_id']
+            if sid not in stats_map:
+                stats_map[sid] = {'total':0,'attended':0}
+            stats_map[sid]['total']+=1
+            if logs.get('is_present'):
+                stats_map[sid]['attended']+=1
+        cols = st.columns(2)
+        for i, sub_node in enumerate(subjects):
+            sub = sub_node['subjects']
+            sid = sub['subject_id']
+            stats = stats_map.get(sid,{'total':0,'attended':0})
+            def unenroll_btn():
+                if st.button("Unenroll from the subject",type='secondary', key=f'id_{sid}'):
+                    unenroll_student(student_data['student_id'],sid)
+                    st.rerun()
+            with cols[i%2]:
+                subject_card(
+                    name=sub['subject_name'],
+                    code = sub['subject_code'],
+                    section = sub['section'],
+                    stats = [
+                        ('📆','Total',stats['total']),
+                        ('☑️','Attended',stats['attended']),
+                    ],
+                    footer_callback=unenroll_btn
+                )
+
 
 def student_screen():
     style_bg_dashboard()

@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.database.db import check_subject_exists
+from src.database.db import check_student_already_enrolled, check_subject_exists, enroll_student
 
 @st.dialog("Enroll in subject")
 def enroll_dialog():
@@ -16,5 +16,6 @@ def enroll_dialog():
                     st.warning("You are already enrolled in this course")
                 else:
                     enroll_student(student_id = student_id, subject_id = subject_data['subject_id'])
+            st.rerun()
         else:
             st.warning("Please enter the subject code")
