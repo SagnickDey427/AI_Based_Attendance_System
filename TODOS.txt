@@ -1,2 +1,0 @@
-TODO: Create check_student_already_enrolled() in db.py
-TODO: Create enroll_student() in db.py

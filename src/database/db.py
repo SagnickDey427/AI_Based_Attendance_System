@@ -87,3 +87,9 @@ def get_student_subjects(student_id):
 def get_student_attendance(student_id):
     resp = supabase.table('attendance_logs').select('*,subjects(*)').eq('student_id',student_id).execute()
     return resp.data
+
+def get_subject_name(sub_code):
+    res = supabase.table('subjects').select('subject_name, subject_id').eq('subject_code',sub_code).execute()
+    if res.data:
+        return res.data[0]
+    return None
