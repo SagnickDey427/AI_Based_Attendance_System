@@ -1,0 +1,8 @@
+is_logged_in
+user_role
+student_data
+teacher_data
+teacher_id
+current_teacher_tab
+attendance_images
+photo_tab

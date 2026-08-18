@@ -1,4 +1,5 @@
 import streamlit as st
+from src.components.dialog_add_photos import add_photos_dialog
 from src.components.dialog_share_subject import share_subject_dialog
 from src.components.subject_card import subject_card
 from src.components.dialog_create_subject import create_subject_dialog
@@ -161,7 +162,25 @@ def teacher_dashboard():
     
 
 def teacher_tab_take_attendance():
+    teacherId = st.session_state.teacher_data['teacher_id']
     st.subheader("Take AI attendance") 
+
+    if "attendance_images" not in st.session_state:
+        st.session_state.attendance_images = []
+
+    subject_list = get_teacher_subjects(teacherId)
+    if not subject_list:
+        st.info("You don't have any subjects, please create one first.")
+        return 
+    subject_options = {f"{s['subject_code']} - {s['subject_name']}":f"{s['subject_id']}" for s in subject_list}
+
+    col1,col2 = st.columns([3,1])
+    selected_subject_options = None
+    with col1:
+        selected_subject_options = st.selectbox("Select a subject",options=list(subject_options.keys()))
+    with col2:
+        if st.button("➕ Add photos",icon=":materials/monochrome_photos:",type='primary', width='stretch'):
+            add_photos_dialog()
 
 
 
